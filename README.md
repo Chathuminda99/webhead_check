@@ -1,7 +1,7 @@
 
 # Webhead Check
 
-Webhead Check is a Python script that fetches HTTP headers for a list of URLs and generates a report in an Excel file. It helps identify the presence or absence of critical security headers for each URL.
+Webhead Check is a Python script for analyzing HTTP security headers. It processes a single URL or a list of URLs and generates a report highlighting the presence or absence of critical security headers. Designed for security professionals, it helps assess the security posture of web applications.
 
 ## Features
 
@@ -15,10 +15,11 @@ Webhead Check is a Python script that fetches HTTP headers for a list of URLs an
   - `Cross-Origin-Embedder-Policy`
   - `Cross-Origin-Resource-Policy`
   - `Cross-Origin-Opener-Policy`
-- Generates a color-coded Excel report:
-  - **Green** for headers that are implemented.
-  - **Red** for headers that are missing.
-- Displays a progress bar while processing URLs.
+- **Single URL Mode**: Displays results directly in the terminal.
+- **List Mode**: Processes multiple URLs from a file and generates a color-coded Excel report:
+  - **Green** for headers implemented.
+  - **Red** for headers missing.
+- Real-time progress updates with a user-friendly progress bar.
 
 ## Prerequisites
 
@@ -34,32 +35,56 @@ Webhead Check is a Python script that fetches HTTP headers for a list of URLs an
 
 ## Usage
 
-Run the script with the following arguments:
+Run the script with one of the following options:
+
+### Single URL
+
+Use the `-u` or `--url` option to analyze a single URL and display the results in the terminal.
 
 ```bash
-python webhead_check.py -u <urls_file> [-o <output_file>]
+python webhead_check.py -u <url>
 ```
 
-### Arguments:
-
-- `-u`, `--urls` (required): Path to the file containing the list of URLs (one URL per line).
-- `-o`, `--output` (optional): Name of the output Excel file. Defaults to `security_headers_report.xlsx`. If only a name is provided, the `.xlsx` extension will be added automatically.
-
-### Example:
+Example:
 
 ```bash
-python webhead_check.py -u urls.txt -o headers_report
+python webhead_check.py -u https://example.com
+```
+
+### List of URLs
+
+Use the `-l` or `--list` option to analyze a list of URLs from a file and generate an Excel report.
+
+```bash
+python webhead_check.py -l <list_file> [-o <output_file>]
+```
+
+Example:
+
+```bash
+python webhead_check.py -l urls.txt -o headers_report
 ```
 
 This command will process the URLs in `urls.txt` and create an Excel report named `headers_report.xlsx`.
 
+### Arguments
+
+- `-u`, `--url`: Analyze a single URL.
+- `-l`, `--list`: Path to the file containing the list of URLs (one URL per line).
+- `-o`, `--output`: Name of the output Excel file. Defaults to `security_headers_report.xlsx`. If only a name is provided, the `.xlsx` extension will be added automatically.
+
 ## Output
 
-The script generates an Excel file with the following structure:
+For single URL analysis:
 
-- Column 1: URL
-- Columns 2+: Security headers
-- Each cell indicates whether the header is implemented (`Header Implemented`) or missing (`Header Not Implemented`).
+- Results are displayed in the terminal.
+
+For multiple URL analysis:
+
+- The script generates an Excel file with the following structure:
+  - Column 1: URL
+  - Columns 2+: Security headers
+  - Each cell indicates whether the header is implemented (`Header Implemented`) or missing (`Header Not Implemented`).
 
 ## Dependencies
 
