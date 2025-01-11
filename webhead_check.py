@@ -89,27 +89,39 @@ def generate_excel(urls, output_file):
     # Save the workbook
     workbook.save(output_file)
 
+# Display results for a single URL
+def display_single_url_result(url):
+    headers = fetch_headers(url)
+    print(f"\nResults for URL: {url}\n")
+    for header in SECURITY_HEADERS:
+        status = "Header Implemented" if header in headers else "Header Not Implemented"
+        print(f"{header}: {status}")
+
 # Main script
 def main():
     parser = argparse.ArgumentParser(description="Check security headers for a list of URLs and generate a report.")
-    parser.add_argument("-u", "--urls", required=True, help="Path to the file containing the list of URLs.")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-u", "--url", help="Single URL to check.")
+    group.add_argument("-l", "--list", help="Path to the file containing the list of URLs.")
     parser.add_argument("-o", "--output", required=False, default="security_headers_report.xlsx", help="Name of the output Excel file.")
     args = parser.parse_args()
 
-    input_file = args.urls  # File containing the list of URLs
-    output_file = args.output
+    # Determine input source
+    if args.url:
+        display_single_url_result(args.url)
+    elif args.list:
+        urls = read_urls_from_file(args.list)
 
-    # Ensure output file has .xlsx extension
-    if not output_file.endswith(".xlsx"):
-        output_file += ".xlsx"
+        output_file = args.output
 
-    # Read URLs from file
-    urls = read_urls_from_file(input_file)
+        # Ensure output file has .xlsx extension
+        if not output_file.endswith(".xlsx"):
+            output_file += ".xlsx"
 
-    # Generate Excel report
-    generate_excel(urls, output_file)
+        # Generate Excel report
+        generate_excel(urls, output_file)
 
-    print(f"Security headers report generated successfully: {output_file}")
+        print(f"Security headers report generated successfully: {output_file}")
 
 if __name__ == "__main__":
     main()
